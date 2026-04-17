@@ -115,7 +115,10 @@ Follow the sections in order, or jump to what you need.
 | Topic | File |
 |-------|------|
 | Fundamentals | [01-fundamentals.md](07-cicd/01-fundamentals.md) |
-| GitHub Actions | [02-github-actions.md](07-cicd/02-github-actions.md) |
+| GitHub Actions (Basics) | [02-github-actions.md](07-cicd/02-github-actions.md) |
+| GitHub Actions (Deep Dive) | [03-github-actions-deep-dive.md](07-cicd/03-github-actions-deep-dive.md) |
+| Jenkins | [04-jenkins.md](07-cicd/04-jenkins.md) |
+| ArgoCD & GitOps | [05-argocd.md](07-cicd/05-argocd.md) |
 
 ---
 
@@ -134,6 +137,8 @@ Follow the sections in order, or jump to what you need.
 | Objects | [02-objects.md](08-kubernetes/02-objects.md) |
 | Commands | [03-commands.md](08-kubernetes/03-commands.md) |
 | Helm & EKS | [04-helm-and-eks.md](08-kubernetes/04-helm-and-eks.md) |
+| Helm Deep Dive (Charts, Templating) | [05-helm-deep-dive.md](08-kubernetes/05-helm-deep-dive.md) |
+| SOPS (Secrets in Git) | [06-sops.md](08-kubernetes/06-sops.md) |
 
 ---
 
