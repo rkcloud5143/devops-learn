@@ -102,6 +102,10 @@ Follow the sections in order, or jump to what you need.
 | HCL Basics | [02-hcl-basics.md](06-terraform/02-hcl-basics.md) |
 | State Management | [03-state-management.md](06-terraform/03-state-management.md) |
 | Commands | [04-commands.md](06-terraform/04-commands.md) |
+| Authentication & Credentials | [05-authentication.md](06-terraform/05-authentication.md) |
+| Deep Dive (Modules, Lifecycle, Import) | [06-deep-dive.md](06-terraform/06-deep-dive.md) |
+| Terragrunt (Why, What & How) | [07-terragrunt.md](06-terraform/07-terragrunt.md) |
+| Repo Structures (Simple → Enterprise) | [08-repo-structures.md](06-terraform/08-repo-structures.md) |
 
 ---
 
