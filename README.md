@@ -22,6 +22,7 @@ Follow the sections in order, or jump to what you need.
 | Package Management | [07-package-management.md](01-linux/07-package-management.md) |
 | Bash Scripting | [08-bash-scripting.md](01-linux/08-bash-scripting.md) |
 | Cron Jobs | [09-cron-jobs.md](01-linux/09-cron-jobs.md) |
+| Python & Bash for DevOps | [10-python-bash-devops.md](01-linux/10-python-bash-devops.md) |
 
 ---
 
@@ -90,6 +91,7 @@ Follow the sections in order, or jump to what you need.
 | Commands | [02-commands.md](05-docker/02-commands.md) |
 | Docker Compose | [03-docker-compose.md](05-docker/03-docker-compose.md) |
 | AWS Containers (ECS/ECR) | [04-aws-containers.md](05-docker/04-aws-containers.md) |
+| Deep Dive (Multi-stage, Security, Networking) | [05-deep-dive.md](05-docker/05-deep-dive.md) |
 
 ---
 
@@ -106,6 +108,7 @@ Follow the sections in order, or jump to what you need.
 | Deep Dive (Modules, Lifecycle, Import) | [06-deep-dive.md](06-terraform/06-deep-dive.md) |
 | Terragrunt (Why, What & How) | [07-terragrunt.md](06-terraform/07-terragrunt.md) |
 | Repo Structures (Simple → Enterprise) | [08-repo-structures.md](06-terraform/08-repo-structures.md) |
+| Ansible (Configuration Management) | [09-ansible.md](06-terraform/09-ansible.md) |
 
 ---
 
@@ -119,6 +122,7 @@ Follow the sections in order, or jump to what you need.
 | GitHub Actions (Deep Dive) | [03-github-actions-deep-dive.md](07-cicd/03-github-actions-deep-dive.md) |
 | Jenkins | [04-jenkins.md](07-cicd/04-jenkins.md) |
 | ArgoCD & GitOps | [05-argocd.md](07-cicd/05-argocd.md) |
+| AWS CodePipeline & CodeBuild | [06-aws-codepipeline.md](07-cicd/06-aws-codepipeline.md) |
 
 ---
 
@@ -139,6 +143,10 @@ Follow the sections in order, or jump to what you need.
 | Helm & EKS | [04-helm-and-eks.md](08-kubernetes/04-helm-and-eks.md) |
 | Helm Deep Dive (Charts, Templating) | [05-helm-deep-dive.md](08-kubernetes/05-helm-deep-dive.md) |
 | SOPS (Secrets in Git) | [06-sops.md](08-kubernetes/06-sops.md) |
+| Prometheus & Grafana (Monitoring) | [07-prometheus-grafana.md](08-kubernetes/07-prometheus-grafana.md) |
+| EFK/ELK Stack (Logging) | [08-logging-efk.md](08-kubernetes/08-logging-efk.md) |
+| Service Mesh (Istio & Linkerd) | [09-service-mesh.md](08-kubernetes/09-service-mesh.md) |
+| Karpenter (Node Autoscaling) | [10-karpenter.md](08-kubernetes/10-karpenter.md) |
 
 ---
 
