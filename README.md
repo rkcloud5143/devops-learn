@@ -200,6 +200,7 @@ Follow the sections in order, or jump to what you need.
 | Networking & Git | 120 | [qa-networking-git.md](10-interview-prep/qa-networking-git.md) |
 | Real-World Scenarios | 40 | [qa-scenarios.md](10-interview-prep/qa-scenarios.md) |
 | **Senior DevOps Q&A** | 20 | [senior-devops-qa.md](10-interview-prep/senior-devops-qa.md) |
+| **Advanced Roles (SRE, DevOps, Platform, DevSecOps)** | 50+ | [qa-advanced-roles.md](10-interview-prep/qa-advanced-roles.md) |
 
 #### Additional Resources
 | Topic | File |
