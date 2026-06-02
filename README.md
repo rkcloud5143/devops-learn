@@ -98,6 +98,7 @@ Follow the sections in order, or jump to what you need.
 | AWS CLI | [19-aws-cli.md](04-aws/19-aws-cli.md) |
 | Certification Tips | [20-certification-tips.md](04-aws/20-certification-tips.md) |
 | Cloud Cost Optimization (FinOps) | [21-cost-optimization.md](04-aws/21-cost-optimization.md) |
+| Cloudflare (DNS, CDN, WAF, Zero Trust, Workers) | [22-cloudflare.md](04-aws/22-cloudflare.md) |
 
 ---
 
@@ -144,6 +145,8 @@ Follow the sections in order, or jump to what you need.
 | Jenkins | [04-jenkins.md](07-cicd/04-jenkins.md) |
 | ArgoCD & GitOps | [05-argocd.md](07-cicd/05-argocd.md) |
 | AWS CodePipeline & CodeBuild | [06-aws-codepipeline.md](07-cicd/06-aws-codepipeline.md) |
+| Jenkins In-Depth (K8s agents, pipelines, security) | [07-jenkins-in-depth.md](07-cicd/07-jenkins-in-depth.md) |
+| GitHub Actions In-Depth (OIDC, ARC, composite actions) | [08-github-actions-in-depth.md](07-cicd/08-github-actions-in-depth.md) |
 
 ---
 
@@ -172,6 +175,8 @@ Follow the sections in order, or jump to what you need.
 | HashiCorp Vault (Enterprise Secrets) | [12-vault.md](08-kubernetes/12-vault.md) |
 | OpenTelemetry (Observability Standard) | [13-opentelemetry.md](08-kubernetes/13-opentelemetry.md) |
 | Observability Basics (Metrics, Logs, Traces) | [14-observability-basics.md](08-kubernetes/14-observability-basics.md) |
+| EKS Troubleshooting (CrashLoop, Evictions, Cordon, Drain) | [15-eks-troubleshooting.md](08-kubernetes/15-eks-troubleshooting.md) |
+| EKS In-Depth (VPC CNI, IRSA, Add-ons, Upgrades) | [16-eks-in-depth.md](08-kubernetes/16-eks-in-depth.md) |
 
 ---
 
