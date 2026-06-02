@@ -1,0 +1,72 @@
+# Project 1: Full Infrastructure with Terraform
+
+## Architecture
+```
+                         Internet
+                            │
+                    ┌───────▼───────┐
+                    │   Route 53    │
+                    │ myapp.com     │
+                    └───────┬───────┘
+                            │
+                    ┌───────▼───────┐
+                    │     ALB       │
+                    │ (HTTPS:443)   │
+                    └───┬───────┬───┘
+                        │       │
+          ┌─────────────▼─┐   ┌─▼─────────────┐
+          │ Public Subnet  │   │ Public Subnet  │
+          │    AZ-a        │   │    AZ-b        │
+          │ ┌───────────┐  │   │ ┌───────────┐  │
+          │ │   EC2     │  │   │ │   EC2     │  │
+          │ │ (nginx +  │  │   │ │ (nginx +  │  │
+          │ │  app)     │  │   │ │  app)     │  │
+          │ └───────────┘  │   │ └───────────┘  │
+          └────────────────┘   └────────────────┘
+                        │       │
+          ┌─────────────▼─┐   ┌─▼─────────────┐
+          │ Private Subnet │   │ Private Subnet │
+          │    AZ-a        │   │    AZ-b        │
+          │ ┌───────────┐  │   │ ┌───────────┐  │
+          │ │ RDS Primary│  │   │ │ RDS Standby│  │
+          │ │ (Postgres) │  │   │ │ (Multi-AZ) │  │
+          │ └───────────┘  │   │ └───────────┘  │
+          └────────────────┘   └────────────────┘
+```
+
+## What to Build
+```
+Terraform code that creates:
+├── VPC with 2 public + 2 private subnets
+├── Internet Gateway + NAT Gateway
+├── Security Groups (ALB, EC2, RDS)
+├── ALB with target group + health checks
+├── Auto Scaling Group (min=2, max=4)
+├── Launch Template with user data (install app)
+├── RDS PostgreSQL (Multi-AZ) in private subnets
+├── S3 bucket for Terraform remote state
+├── CloudWatch alarms (CPU, 5xx errors)
+└── SNS topic for alert notifications
+```
+
+## GitHub Repo Structure
+```
+project-1-terraform-infra/
+├── README.md
+├── modules/
+│   ├── vpc/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   ├── ec2/
+│   ├── rds/
+│   └── alb/
+├── environments/
+│   ├── dev/
+│   │   ├── main.tf
+│   │   └── terraform.tfvars
+│   └── prod/
+│       ├── main.tf
+│       └── terraform.tfvars
+└── backend.tf
+```

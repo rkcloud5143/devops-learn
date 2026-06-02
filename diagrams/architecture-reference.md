@@ -1,0 +1,255 @@
+# Architecture Reference Diagrams
+
+Quick-reference diagrams for common AWS architectures that come up in interviews.
+
+---
+
+## 1. Three-Tier Web Application (Most Common Interview Question)
+
+```
+                         Internet
+                            │
+                    ┌───────▼───────┐
+                    │  CloudFront   │  ← CDN (caches static content)
+                    │  (optional)   │
+                    └───────┬───────┘
+                            │
+                    ┌───────▼───────┐
+                    │   Route 53    │  ← DNS
+                    └───────┬───────┘
+                            │
+┌───── VPC: 10.0.0.0/16 ───▼──────────────────────────────────┐
+│                                                               │
+│  ┌─── Public Subnets ─────────────────────────────────────┐  │
+│  │                                                         │  │
+│  │  ┌─────────────────────────────────────────────────┐   │  │
+│  │  │              ALB (Application Load Balancer)     │   │  │
+│  │  └──────────────────┬──────────────────────────────┘   │  │
+│  │                     │                                   │  │
+│  └─────────────────────┼───────────────────────────────────┘  │
+│                        │                                      │
+│  ┌─── Private Subnets (App Tier) ──────────────────────────┐ │
+│  │                     │                                    │ │
+│  │    ┌────────────────┼────────────────┐                  │ │
+│  │    │        Auto Scaling Group       │                  │ │
+│  │    │  ┌──────────┐   ┌──────────┐   │                  │ │
+│  │    │  │   EC2    │   │   EC2    │   │                  │ │
+│  │    │  │  (AZ-a)  │   │  (AZ-b)  │   │                  │ │
+│  │    │  └──────────┘   └──────────┘   │                  │ │
+│  │    └─────────────────────────────────┘                  │ │
+│  │                     │                                    │ │
+│  └─────────────────────┼────────────────────────────────────┘ │
+│                        │                                      │
+│  ┌─── Private Subnets (Data Tier) ─────────────────────────┐ │
+│  │                     │                                    │ │
+│  │    ┌──────────┐   ┌──────────┐   ┌──────────┐          │ │
+│  │    │   RDS    │   │   RDS    │   │ElastiCache│          │ │
+│  │    │ Primary  │   │ Standby  │   │  (Redis)  │          │ │
+│  │    │  (AZ-a)  │   │  (AZ-b)  │   │           │          │ │
+│  │    └──────────┘   └──────────┘   └──────────┘          │ │
+│  │                                                          │ │
+│  └──────────────────────────────────────────────────────────┘ │
+│                                                               │
+└───────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 2. Serverless Architecture
+
+```
+┌─── Client ───┐
+│  Browser /   │
+│  Mobile App  │
+└──────┬───────┘
+       │
+┌──────▼───────┐     ┌──────────────┐     ┌──────────────┐
+│ API Gateway  │────►│   Lambda     │────►│  DynamoDB    │
+│              │     │  (compute)   │     │  (database)  │
+│ REST/HTTP    │     │              │     │              │
+│ endpoints    │     │ Auto-scales  │     │ Auto-scales  │
+│              │     │ to zero      │     │ on-demand    │
+└──────────────┘     └──────┬───────┘     └──────────────┘
+                            │
+                     ┌──────▼───────┐
+                     │     S3       │
+                     │ (file store) │
+                     └──────┬───────┘
+                            │
+                     ┌──────▼───────┐
+                     │     SNS      │
+                     │(notifications)│
+                     └──────────────┘
+
+Benefits: No servers, auto-scaling, pay-per-use
+Use when: Variable traffic, event-driven, cost-sensitive
+```
+
+---
+
+## 3. Microservices on ECS/EKS
+
+```
+                    ┌───────────────┐
+                    │     ALB       │
+                    └───┬───────┬───┘
+                        │       │
+         ┌──────────────▼──┐ ┌──▼──────────────┐
+         │  /api/users/*   │ │  /api/orders/*   │
+         └────────┬────────┘ └────────┬─────────┘
+                  │                    │
+┌─── ECS Cluster ─▼────────────────────▼──────────────┐
+│                                                       │
+│  ┌─── Service: Users ────┐  ┌─── Service: Orders ──┐│
+│  │  ┌──────┐ ┌──────┐   │  │  ┌──────┐ ┌──────┐  ││
+│  │  │Task 1│ │Task 2│   │  │  │Task 1│ │Task 2│  ││
+│  │  └──────┘ └──────┘   │  │  └──────┘ └──────┘  ││
+│  │  Image: users-svc:v2  │  │  Image: orders:v3   ││
+│  └───────────┬───────────┘  └──────────┬──────────┘│
+│              │                          │           │
+└──────────────┼──────────────────────────┼───────────┘
+               │                          │
+        ┌──────▼──────┐           ┌───────▼─────┐
+        │  RDS        │           │  DynamoDB   │
+        │ (Users DB)  │           │ (Orders)    │
+        └─────────────┘           └─────────────┘
+
+Each service:
+- Has its own container image
+- Scales independently
+- Has its own database
+- Deployed independently via CI/CD
+```
+
+---
+
+## 4. CI/CD Pipeline (Complete Flow)
+
+```
+Developer        GitHub           CI/CD              AWS
+   │                │                │                 │
+   │ git push       │                │                 │
+   ├───────────────►│                │                 │
+   │                │  webhook       │                 │
+   │                ├───────────────►│                 │
+   │                │                │                 │
+   │                │         ┌──────▼──────┐          │
+   │                │         │  1. CHECKOUT │          │
+   │                │         │  Pull code   │          │
+   │                │         └──────┬──────┘          │
+   │                │                │                 │
+   │                │         ┌──────▼──────┐          │
+   │                │         │  2. TEST     │          │
+   │                │         │  Unit tests  │          │
+   │                │         │  Lint check  │          │
+   │                │         └──────┬──────┘          │
+   │                │                │                 │
+   │                │         ┌──────▼──────┐   ┌──────▼──────┐
+   │                │         │  3. BUILD    │──►│    ECR      │
+   │                │         │  Docker image│   │  (Registry) │
+   │                │         └──────┬──────┘   └─────────────┘
+   │                │                │                 │
+   │                │         ┌──────▼──────┐   ┌──────▼──────┐
+   │                │         │  4. DEPLOY   │──►│  ECS / EKS  │
+   │                │         │  Update svc  │   │  (Runtime)  │
+   │                │         └──────┬──────┘   └─────────────┘
+   │                │                │                 │
+   │                │         ┌──────▼──────┐   ┌──────▼──────┐
+   │                │         │  5. VERIFY   │──►│ CloudWatch  │
+   │                │         │  Health check│   │ (Monitoring)│
+   │                │         └─────────────┘   └─────────────┘
+```
+
+---
+
+## 5. Disaster Recovery Strategies
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                                                              │
+│  Strategy        RTO/RPO    Cost    How it works            │
+│  ─────────────────────────────────────────────────────────  │
+│                                                              │
+│  Backup &        Hours      $       S3 cross-region         │
+│  Restore                            replication, restore    │
+│                                     from backup             │
+│                                                              │
+│  Pilot Light     Minutes    $$      Core services running   │
+│                                     in DR region, scale up  │
+│                                     when needed             │
+│                                                              │
+│  Warm Standby    Minutes    $$$     Scaled-down copy in     │
+│                                     DR region, scale up     │
+│                                     on failover             │
+│                                                              │
+│  Multi-Site      Seconds    $$$$    Full copy in both       │
+│  Active-Active                      regions, Route53        │
+│                                     failover routing        │
+│                                                              │
+│  RTO = Recovery Time Objective (how fast to recover)        │
+│  RPO = Recovery Point Objective (how much data can you lose)│
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 6. AWS Well-Architected Framework (Interview Favorite)
+
+```
+┌─── 6 Pillars ───────────────────────────────────────────────┐
+│                                                              │
+│  1. Operational Excellence                                  │
+│     └── Automate, monitor, improve (IaC, CI/CD, CloudWatch)│
+│                                                              │
+│  2. Security                                                │
+│     └── IAM, encryption, VPC, least privilege               │
+│                                                              │
+│  3. Reliability                                             │
+│     └── Multi-AZ, Auto Scaling, backups, health checks      │
+│                                                              │
+│  4. Performance Efficiency                                  │
+│     └── Right-size instances, caching, CDN                  │
+│                                                              │
+│  5. Cost Optimization                                       │
+│     └── Reserved instances, right-sizing, S3 lifecycle      │
+│                                                              │
+│  6. Sustainability                                          │
+│     └── Efficient resource usage, managed services          │
+│                                                              │
+│  TIP: In interviews, mention which pillar your design       │
+│  decision addresses. It shows maturity.                     │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Quick Reference: Which Service When?
+
+```
+┌─────────────────────┬────────────────────────────────────┐
+│ Need                │ AWS Service                        │
+├─────────────────────┼────────────────────────────────────┤
+│ Run a server        │ EC2                                │
+│ Run containers      │ ECS Fargate or EKS                 │
+│ Run code without    │ Lambda                             │
+│   servers           │                                    │
+│ Store files         │ S3                                 │
+│ SQL database        │ RDS (Postgres/MySQL)               │
+│ NoSQL database      │ DynamoDB                           │
+│ Caching             │ ElastiCache (Redis)                │
+│ DNS                 │ Route 53                           │
+│ CDN                 │ CloudFront                         │
+│ Load balancing      │ ALB (HTTP) or NLB (TCP)            │
+│ Message queue       │ SQS                                │
+│ Pub/sub             │ SNS                                │
+│ Container registry  │ ECR                                │
+│ Secrets             │ Secrets Manager or SSM Param Store │
+│ Monitoring          │ CloudWatch                         │
+│ Audit trail         │ CloudTrail                         │
+│ Encryption keys     │ KMS                                │
+│ Web firewall        │ WAF                                │
+│ VPN                 │ Site-to-Site VPN or Client VPN     │
+│ Static website      │ S3 + CloudFront                    │
+└─────────────────────┴────────────────────────────────────┘
+```
